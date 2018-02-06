@@ -1,0 +1,10 @@
+{
+    "require": {
+        "php": ">=7.0",
+        "ext-phalcon": ">=3.2",
+        "ext-sqlite3": ">=3"
+    },
+    "require-dev": {
+        "phalcon/devtools": "3.2.*@dev"
+     }
+}

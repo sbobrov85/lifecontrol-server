@@ -8,5 +8,5 @@ sudo add-apt-repository -y ppa:ondrej/php
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C
 sudo apt-get remove -y php5
 sudo apt-get update
-sudo apt-get install -y php7.0 php7.0-mysql libapache2-mod-php7.0 php7.0-phalcon
+sudo apt-get install -y php7.0 php7.0-mysql libapache2-mod-php7.0 php7.0-phalcon php7.0-sqlite3
 sudo apt-get autoremove -y
