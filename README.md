@@ -18,3 +18,7 @@ Used technologies:
 * Use ubuntu with installed apache2
 * Run init-env.sh (need sudo)
 * Install composer and run composer install from root
+
+## Work progress
+
+See https://waffle.io/sbobrov85/lifecontrol-server
