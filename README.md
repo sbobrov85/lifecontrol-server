@@ -4,7 +4,7 @@
 
 ## General info
 
-This is learnig project!
+This is learning project!
 
 RESTful application for personal money tracking and other tasks (in future).
 
