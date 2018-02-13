@@ -1,4 +1,5 @@
 <?php
+
 //define path constants
 define('PROJECT_ROOT', __DIR__ . DIRECTORY_SEPARATOR . '..');
 define('CONFIG_DIR', PROJECT_ROOT . DIRECTORY_SEPARATOR . 'config');
@@ -15,8 +16,17 @@ try {
     $loggerConfig = $di->get('config')->get('logger');
     $logger = \Phalcon\Logger\Factory::load($loggerConfig);
     $di->set('logger', $logger);
-    $logger->debug('Logger init success');
+    $logger->info('Logger init success');
 
+    $logger->info('Adding not found route');
+    $app->notFound(function() {
+        throw new Includes\Exception\Http404Exception();
+    });
+
+    $logger->info('Scan modules and mount routes');
+    Helpers\Module::collectRoutes($app);
+
+    // add response handler
     $app->after(function () use ($app) {
         $result = $app->getReturnedValue();
 
@@ -38,7 +48,7 @@ try {
     Helpers\Common::getResponse(400)->send();
 } catch (\Exception $e) { // log any other exceptions...
     if (isset($logger)) {
-        $logger->error("Critical server error:\n$e");
+        $logger->critical("Critical server error:\n$e");
     }
     Helpers\Common::getResponse(500)->send();
 }

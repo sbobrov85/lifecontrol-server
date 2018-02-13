@@ -25,6 +25,6 @@ abstract class HttpAbstractException extends \Exception {
      */
     public function __construct()
     {
-        parent::__construct(static::HTTP_MESSAGE, static::HTTP_ERROR);
+        parent::__construct(static::HTTP_MESSAGE, static::HTTP_CODE);
     }
 }
