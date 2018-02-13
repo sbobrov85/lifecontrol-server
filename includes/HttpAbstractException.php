@@ -11,7 +11,7 @@ abstract class HttpAbstractException extends \Exception {
     /**
      * Contains code key.
      */
-    const CODE_KEY = 'key';
+    const CODE_KEY = 'code';
 
     /**
      * Contains message key.

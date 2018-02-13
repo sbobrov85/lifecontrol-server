@@ -38,8 +38,8 @@ class Common {
         $response
             ->setStatusCode($code, $responseMessage)
             ->setJsonContent([ //TODO: use  constants from HttpAbstractException
-                'code' => $code,
-                'message' => $message ?: $responseMessage
+                HttpAbstractException::CODE_KEY => $code,
+                HttpAbstractException::MESSAGE_KEY => $message ?: $responseMessage
             ]);
         return $response;
     }
