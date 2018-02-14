@@ -44,4 +44,22 @@ final class Module {
             }
         }
     }
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Scanning modules and collect events listeners to events manager.
+     */
+    public static function collectListeners(Phalcon\Events\Manager &$eventsManager)
+    {
+        $modules = self::scanModules();
+        foreach ($modules as $module) {
+            $listeners = $moduleClassName::listeners();
+            if (is_array($listeners)) {
+                foreach ($listeners as $component => $listener) {
+                    $eventsManager->attach($component, $listener);
+                }
+            }
+        }
+    }
 }

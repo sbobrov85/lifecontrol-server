@@ -9,6 +9,7 @@ $loader->registerNamespaces([
         PROJECT_ROOT . DIRECTORY_SEPARATOR . 'includes'
         . DIRECTORY_SEPARATOR . 'exception'
     ),
+    'Entity' => realpath(PROJECT_ROOT . DIRECTORY_SEPARATOR . 'entity'),
 ]);
 
 $loader->register();

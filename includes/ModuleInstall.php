@@ -33,4 +33,13 @@ interface ModuleInstall {
      * @return \Phalcon\Mvc\Micro\Collection rotes collections.
      */
     public static function routes(): \Phalcon\Mvc\Micro\Collection;
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Getting a collection of listeners.
+     *
+     * @return array pairs 'Component' => listener instance.
+     */
+    public static function listeners(): array;
 }

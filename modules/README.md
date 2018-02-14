@@ -23,6 +23,7 @@ When lifecontrol-server application started then it scan modules folder and do s
 * Register module namespaces.
 * Checking module installation and if it not installed then executing ModuleName\Install::register() for start installations process.
 * Executing static method ModuleName\Install::routes() for adding module routes.
+* Executing static method ModuleName\Install::listeners() for adding events listeners.
 
 ### db folder
 

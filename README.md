@@ -19,6 +19,11 @@ Used technologies:
 * Run init-env.sh (need sudo)
 * Install composer and run composer install from root
 
+## Creating modules
+
+See [short modules guide](modules/README.md).
+
+
 ## Work progress
 
 See https://waffle.io/sbobrov85/lifecontrol-server
