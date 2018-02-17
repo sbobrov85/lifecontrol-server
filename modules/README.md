@@ -7,8 +7,8 @@ This folder contains core and 3rd party modules for application.
 The folder structure of module must match the MVC pattern.
 
 moduleName
-|- db
 |- model
+|-|-entity
 |- view
 |- controller
 |- Install.php
@@ -16,7 +16,7 @@ moduleName
 
 ### Install.php - common module file.
 
-Each Install.php file must implement Includes\ModuleInstall interface.
+Each Install.php file must extend Includes\ModuleInstall class.
 
 When lifecontrol-server application started then it scan modules folder and do some actions:
 
@@ -25,6 +25,7 @@ When lifecontrol-server application started then it scan modules folder and do s
 * Executing static method ModuleName\Install::routes() for adding module routes.
 * Executing static method ModuleName\Install::listeners() for adding events listeners.
 
-### db folder
+### models folder
 
-This folder must contains database entities for Phalcon ORM.
+This folder must contains models extends base models.
+Subfolder entity must contains base models (database layer)

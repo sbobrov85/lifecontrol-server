@@ -3,18 +3,27 @@
 namespace Includes;
 
 /**
- * Interface ModuleInstall.
+ * Class ModuleInstall.
  *
- * Common interface for core and 3rd party modules.
+ * Common class for core and 3rd party modules.
  * See modules/README.md for details.
  */
-interface ModuleInstall {
+abstract class ModuleInstall {
+    /**
+     * Get module prefix.
+     *
+     * @return string module prefix with _ symbol.
+     */
+    abstract public static function getModulePrefix():string;
+
+    //--------------------------------------------------------------------------
+
     /**
      * Actions for module register into application.
      *
      * @return boolean true, if success, false otherwise.
      */
-    public static function register(): boolean;
+    abstract public static function register(): boolean;
 
     //--------------------------------------------------------------------------
 
@@ -23,7 +32,7 @@ interface ModuleInstall {
      *
      * @return boolean true, if success, false otherwise.
      */
-    public static function unregister(): boolean;
+    abstract public static function unregister(): boolean;
 
     //--------------------------------------------------------------------------
 
@@ -32,14 +41,14 @@ interface ModuleInstall {
      *
      * @return \Phalcon\Mvc\Micro\Collection rotes collections.
      */
-    public static function routes(): \Phalcon\Mvc\Micro\Collection;
+    abstract public static function routes(): \Phalcon\Mvc\Micro\Collection;
 
     //--------------------------------------------------------------------------
 
     /**
      * Getting a collection of listeners.
      *
-     * @return array pairs 'Component' => listener instance.
+     * @return array pairs 'Module' => listener instance.
      */
-    public static function listeners(): array;
+    abstract public static function listeners(): array;
 }
