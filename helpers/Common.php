@@ -1,7 +1,9 @@
 <?php
 namespace Helpers;
 
-use \Phalcon\Http\Response;
+use
+    \Includes\HttpAbstractException,
+    \Phalcon\Http\Response;
 
 /**
  * Class Common.
@@ -9,18 +11,6 @@ use \Phalcon\Http\Response;
  * Contains various methods for application.
  */
 class Common {
-    /**
-     * @param array contains response statuses messages.
-     */
-    private static $statuses = [
-        200 => 'Success',
-        204 => 'Not content',
-        400 => 'Bad request',
-        500 => 'Internal server error'
-    ];
-
-    //--------------------------------------------------------------------------
-
     /**
      * Construct response object.
      *
@@ -34,27 +24,12 @@ class Common {
         string $message = null
     ): Response {
         $response = new Response();
-        $responseMessage = self::getResponseStatusMessage($code);
         $response
-            ->setStatusCode($code, $responseMessage)
-            ->setJsonContent([ //TODO: use  constants from HttpAbstractException
+            ->setStatusCode($code)
+            ->setJsonContent([
                 HttpAbstractException::CODE_KEY => $code,
-                HttpAbstractException::MESSAGE_KEY => $message ?: $responseMessage
+                HttpAbstractException::MESSAGE_KEY => $message ?: 'No details message'
             ]);
         return $response;
-    }
-
-    //--------------------------------------------------------------------------
-
-    /**
-     * Get response status message by code.
-     *
-     * @param int response code.
-     *
-     * @return string response status message.
-     */
-    public static function getResponseStatusMessage(int $code): string
-    {
-        return self::$statuses[$code] ?? 'Unsupported status';
     }
 }

@@ -12,7 +12,7 @@ class Http404Exception extends HttpAbstractException {
     /**
      * Contains http message.
      */
-    const HTTP_MESSAGE = 'Not Found';
+    const HTTP_MESSAGE = 'Url Not Found';
 
     /**
      * Contains http code.

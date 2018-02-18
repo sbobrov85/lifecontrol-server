@@ -23,7 +23,7 @@ final class Module {
         );
 
         $modules = array_map(function($moduleFolder) {
-            return basename('Modules\\' . $moduleFolder . '\Install');
+            return 'Modules\\' . basename($moduleFolder . '\Install');
         }, $moduleFolders);
 
         return $modules;
@@ -37,7 +37,7 @@ final class Module {
     public static function collectRoutes(\Phalcon\Mvc\Micro &$app)
     {
         $modules = self::scanModules();
-        foreach ($modules as $module) {
+        foreach ($modules as $moduleClassName) {
             $routes = $moduleClassName::routes();
             if (!empty($routes)) {
                 $app->mount($routes);
@@ -50,10 +50,10 @@ final class Module {
     /**
      * Scanning modules and collect events listeners to events manager.
      */
-    public static function collectListeners(Phalcon\Events\Manager &$eventsManager)
+    public static function collectListeners(\Phalcon\Events\Manager &$eventsManager)
     {
         $modules = self::scanModules();
-        foreach ($modules as $module) {
+        foreach ($modules as $moduleClassName) {
             $listeners = $moduleClassName::listeners();
             if (is_array($listeners)) {
                 foreach ($listeners as $component => $listener) {

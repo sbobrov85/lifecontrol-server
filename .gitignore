@@ -2,3 +2,4 @@ log/
 vendor/
 *.db
 config/config.php
+php_errors.log
