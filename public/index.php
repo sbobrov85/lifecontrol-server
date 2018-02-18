@@ -1,8 +1,8 @@
 <?php
 
 //define path constants
-define('PROJECT_ROOT', __DIR__ . DIRECTORY_SEPARATOR . '..');
-define('CONFIG_DIR', PROJECT_ROOT . DIRECTORY_SEPARATOR . 'config');
+define('PROJECT_ROOT', realpath(__DIR__ . DIRECTORY_SEPARATOR . '..'));
+define('CONFIG_DIR', realpath(PROJECT_ROOT . DIRECTORY_SEPARATOR . 'config'));
 
 try {
     require_once(CONFIG_DIR . DIRECTORY_SEPARATOR . 'loader.php');
@@ -18,9 +18,13 @@ try {
     $di->set('logger', $logger);
     $logger->info('Logger init success');
 
+    $logger->debug(
+        'Current request URI: ' . (new \Phalcon\Http\Request())->getURI()
+    );
+
     $logger->info('Adding not found route');
     $app->notFound(function() {
-        throw new Includes\Exception\Http404Exception();
+        throw new \Includes\Exception\Http404Exception();
     });
 
     $logger->info('Scan modules and mount routes');
@@ -28,7 +32,7 @@ try {
 
     // Creating events manager and attach listeners from modules
     $logger->info('Attach event listeners from modules');
-    $eventsManager = new Phalcon\Events\Manager();
+    $eventsManager = new \Phalcon\Events\Manager();
     Helpers\Module::collectListeners($eventsManager);
     $app->setEventsManager($eventsManager);
 
@@ -39,7 +43,7 @@ try {
         if (is_array($result)) {
            $app->response->setContent(json_encode($result));
         } elseif (empty($result)) {
-            $app->response->setContent('204', 'No Content');
+            throw new \Includes\Exception\Http204Exception();
         } else {
             throw new Exception('Bad response');
         }
@@ -48,7 +52,7 @@ try {
     });
 
     $app->handle();
-} catch (Includes\AbstractHttpException $e) {
+} catch (\Includes\HttpAbstractException $e) {
     Helpers\Common::getResponse($e->getCode(), $e->getMessage())->send();
 } catch (\Phalcon\Http\Request\Exception $e) {
     Helpers\Common::getResponse(400)->send();

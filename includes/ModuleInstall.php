@@ -14,25 +14,25 @@ abstract class ModuleInstall {
      *
      * @return string module prefix with _ symbol.
      */
-    abstract public static function getModulePrefix():string;
+    // abstract public static function getModulePrefix():string;
 
     //--------------------------------------------------------------------------
 
     /**
      * Actions for module register into application.
      *
-     * @return boolean true, if success, false otherwise.
+     * @return bool true, if success, false otherwise.
      */
-    abstract public static function register(): boolean;
+    abstract public static function register(): bool;
 
     //--------------------------------------------------------------------------
 
     /**
      * Actions for module unregister from application.
      *
-     * @return boolean true, if success, false otherwise.
+     * @return bool true, if success, false otherwise.
      */
-    abstract public static function unregister(): boolean;
+    abstract public static function unregister(): bool;
 
     //--------------------------------------------------------------------------
 

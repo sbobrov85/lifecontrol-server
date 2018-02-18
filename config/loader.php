@@ -3,13 +3,12 @@
 $loader = new \Phalcon\Loader();
 
 $loader->registerNamespaces([
-    'Helpers' => realpath(PROJECT_ROOT . DIRECTORY_SEPARATOR . 'helpers'),
-    'Includes' => realpath(PROJECT_ROOT . DIRECTORY_SEPARATOR . 'includes'),
-    'Exception' => realpath(
-        PROJECT_ROOT . DIRECTORY_SEPARATOR . 'includes'
-        . DIRECTORY_SEPARATOR . 'exception'
-    ),
-    'Entity' => realpath(PROJECT_ROOT . DIRECTORY_SEPARATOR . 'entity'),
+    'Helpers' => PROJECT_ROOT . DIRECTORY_SEPARATOR . 'helpers',
+    'Includes' => PROJECT_ROOT . DIRECTORY_SEPARATOR . 'includes',
+    'Includes\Exception' =>  PROJECT_ROOT . DIRECTORY_SEPARATOR . 'includes'
+        . DIRECTORY_SEPARATOR . 'exception',
+    'Entity' => PROJECT_ROOT . DIRECTORY_SEPARATOR . 'entity',
+    'Modules' => PROJECT_ROOT . DIRECTORY_SEPARATOR . 'modules',
 ]);
 
 $loader->register();
