@@ -38,6 +38,8 @@ try {
 
         if (is_array($result)) {
            $app->response->setContent(json_encode($result));
+        } elseif (!empty($result) && !is_array($result)) {
+            $app->response->setContent($result);
         } elseif (empty($result)) {
             $app->response->setContent('204', 'No Content');
         } else {
