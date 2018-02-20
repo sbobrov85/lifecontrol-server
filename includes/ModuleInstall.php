@@ -2,6 +2,10 @@
 
 namespace Includes;
 
+use
+    \Phalcon\Db\Adapter\Pdo as AdapterPdo,
+    \Models\Module;
+
 /**
  * Class ModuleInstall.
  *
@@ -10,11 +14,82 @@ namespace Includes;
  */
 abstract class ModuleInstall {
     /**
-     * Get module prefix.
-     *
-     * @return string module prefix with _ symbol.
+     * Contains instance of current database connection.
      */
-    // abstract public static function getModulePrefix():string;
+    private $db = null;
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Class constructor.
+     *
+     * @param \Phalcon\Db\Adapter\Pdo $db current database connection.
+     */
+    final public function __construct(AdapterPdo $db) {
+        $this->setDb($db);
+    }
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Set current database connection.
+     *
+     * @param \Phalcon\Db\Adapter\Pdo $db database connection.
+     */
+    final public function setDb(AdapterPdo $db)
+    {
+        $this->db = $db;
+    }
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Get database connection.
+     *
+     * @return \Phalcon\Db\Adapter\Pdo database connection instance.
+     */
+    final public function getDb(): \Phalcon\Db\Adapter\Pdo
+    {
+        return $this->db;
+    }
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Get module info.
+     *
+     * @return array key => value pairs:
+     *                  name => module name in lower case,
+     *                  version => version (number, w/o symbols)
+     */
+    abstract public static function getModuleInfo(): array;
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Check installation status for current module.
+     *
+     * @param \Phalcon\Db\Adapter\Pdo $db current db connection.
+     *
+     * @return bool true, if module installed, false otherwise.
+     */
+    public static function isInstalled(AdapterPdo $db): bool {
+        $info = static::getModuleInfo();
+
+        $result = false;
+
+        $moduleName = $info['name'] ?? null;
+        $moduleVersion = $info['version'] ?? null;
+
+        if ($moduleName && $moduleVersion) {
+            $module = Module::findFirstByName($moduleName);
+            if ($module) {
+                $result = true;
+            }
+        }
+
+        return $result;
+    }
 
     //--------------------------------------------------------------------------
 
@@ -23,7 +98,17 @@ abstract class ModuleInstall {
      *
      * @return bool true, if success, false otherwise.
      */
-    abstract public static function register(): bool;
+    final public function register(): bool
+    {
+        $result = false;
+
+        if (!static::isInstalled($this->getDb())) {
+            $module = new Module(static::getModuleInfo());
+            $result = $module->save($info);
+        }
+
+        return $result;
+    }
 
     //--------------------------------------------------------------------------
 

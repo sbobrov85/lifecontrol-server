@@ -2,6 +2,11 @@
 
 namespace Helpers;
 
+use
+    \Phalcon\Mvc\Micro,
+    \Phalcon\Events\Manager as EventsManager,
+    \Phalcon\Logger\Adapter as LoggerAdapter;
+
 /**
  * Class Module.
  *
@@ -32,33 +37,79 @@ final class Module {
     //--------------------------------------------------------------------------
 
     /**
-     * Scaning modules and collect routes to application.
+     * Register all modules.
+     * Scan add mount routes, attach events, register new modules.
+     *
+     * @param \Phalcon\Mvc\Micro $app current application.
+     * @param \Phalcon\Logger\Adapter $logger current logger.
      */
-    public static function collectRoutes(\Phalcon\Mvc\Micro &$app)
+    public static function register(Micro &$app, LoggerAdapter $logger)
     {
         $modules = self::scanModules();
+
+        $logger->debug('Finded modules count: ' . count($modules));
+
         foreach ($modules as $moduleClassName) {
-            $routes = $moduleClassName::routes();
-            if (!empty($routes)) {
-                $app->mount($routes);
+            $logger->debug('Prepare ' . $moduleClassName);
+
+            $db = $app->getDi()->get('db');
+            if (!$moduleClassName::isInstalled($db)) {
+                $logger->warning("Module $moduleClassName not installed!");
+                $logger->info('Attempt register');
+
+                if (!(new $moduleClassName($db))->register()) {
+                    $logger->error('Error on register! Skipped.');
+                    continue;
+                } else {
+                    $logger->info("Module installed");
+                }
             }
+
+            $logger->debug('Collect routes');
+            self::collectRoutes($app, $moduleClassName);
+
+            $logger->debug('Attach events');
+            $eventsManager = new EventsManager();
+            self::collectListeners($eventsManager, $moduleClassName);
+            $app->setEventsManager($eventsManager);
+
+            $logger->debug('Finished');
+        }
+
+    }
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Collect routes to application.
+     *
+     * @param \Phalcon\Mvc\Micro $app current application.
+     * @param string $moduleClassName full module class name.
+     */
+    private static function collectRoutes(Micro &$app, string $moduleClassName)
+    {
+        $routes = $moduleClassName::routes();
+        if (!empty($routes)) {
+            $app->mount($routes);
         }
     }
 
     //--------------------------------------------------------------------------
 
     /**
-     * Scanning modules and collect events listeners to events manager.
+     * Collect events listeners to events manager.
+     *
+     * @param \Phalcon\Events\Manager $eventsManager events manager instance.
+     * @param string $moduleClassName full module class name.
      */
-    public static function collectListeners(\Phalcon\Events\Manager &$eventsManager)
-    {
-        $modules = self::scanModules();
-        foreach ($modules as $moduleClassName) {
-            $listeners = $moduleClassName::listeners();
-            if (is_array($listeners)) {
-                foreach ($listeners as $component => $listener) {
-                    $eventsManager->attach($component, $listener);
-                }
+    private static function collectListeners(
+        EventsManager &$eventsManager,
+        string $moduleClassName
+    ) {
+        $listeners = $moduleClassName::listeners();
+        if (is_array($listeners)) {
+            foreach ($listeners as $component => $listener) {
+                $eventsManager->attach($component, $listener);
             }
         }
     }

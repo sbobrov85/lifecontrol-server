@@ -9,6 +9,7 @@ $loader->registerNamespaces([
         . DIRECTORY_SEPARATOR . 'exception',
     'Entity' => PROJECT_ROOT . DIRECTORY_SEPARATOR . 'entity',
     'Modules' => PROJECT_ROOT . DIRECTORY_SEPARATOR . 'modules',
+    'Models' => PROJECT_ROOT . DIRECTORY_SEPARATOR . 'models',
 ]);
 
 $loader->register();

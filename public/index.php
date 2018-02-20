@@ -27,14 +27,8 @@ try {
         throw new \Includes\Exception\Http404Exception();
     });
 
-    $logger->info('Scan modules and mount routes');
-    Helpers\Module::collectRoutes($app);
-
-    // Creating events manager and attach listeners from modules
-    $logger->info('Attach event listeners from modules');
-    $eventsManager = new \Phalcon\Events\Manager();
-    Helpers\Module::collectListeners($eventsManager);
-    $app->setEventsManager($eventsManager);
+    // register modules info
+    \Helpers\Module::register($app, $logger);
 
     // add response handler
     $app->after(function () use ($app) {
