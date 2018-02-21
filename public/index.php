@@ -36,6 +36,8 @@ try {
 
         if (is_array($result)) {
            $app->response->setContent(json_encode($result));
+        } elseif (!empty($result)) {
+            $app->response->setContent($result);
         } elseif (empty($result)) {
             throw new \Includes\Exception\Http204Exception();
         } else {
