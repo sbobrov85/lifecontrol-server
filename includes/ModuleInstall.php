@@ -3,6 +3,7 @@
 namespace Includes;
 
 use
+    \Phalcon\Di,
     \Phalcon\Db\Adapter\Pdo as AdapterPdo,
     \Models\Module;
 
@@ -14,31 +15,55 @@ use
  */
 abstract class ModuleInstall {
     /**
-     * Contains instance of current database connection.
+     * Contains dependency injector instance.
      */
-    private $db = null;
+    private $di = null;
+
+    /**
+     * Contains current module full namespace.
+     */
+    private $moduleNamespace = null;
+
+
+    /**
+     * Contains current module base dir name.
+     */
+    private $moduleBaseDir = null;
 
     //--------------------------------------------------------------------------
 
     /**
      * Class constructor.
      *
-     * @param \Phalcon\Db\Adapter\Pdo $db current database connection.
+     * @param \Phalcon\Di $di current di.
      */
-    final public function __construct(AdapterPdo $db) {
-        $this->setDb($db);
+    final public function __construct(Di $di) {
+        $this->di = $di;
+
+        $moduleReflectionClass = (new \ReflectionClass(get_class($this)));
+
+        $this->moduleNamespace = $moduleReflectionClass->getNamespaceName();
+        $this->moduleBaseDir = dirname($moduleReflectionClass->getFileName());
+
+        $this->registerDefaultNamespaces();
     }
 
     //--------------------------------------------------------------------------
 
     /**
-     * Set current database connection.
-     *
-     * @param \Phalcon\Db\Adapter\Pdo $db database connection.
+     * Register default modules namespaces, like models, etc.
      */
-    final public function setDb(AdapterPdo $db)
+    protected function registerDefaultNamespaces()
     {
-        $this->db = $db;
+        $loader = $this->di->get('loader');
+        $loader->registerNamespaces([
+            $this->moduleNamespace => $this->moduleBaseDir,
+            $this->moduleNamespace . '\Models' => $this->moduleBaseDir
+                . '/models',
+            $this->moduleNamespace . '\Models\Base' => $this->moduleBaseDir
+                . '/models/base'
+        ], true);
+        $loader->register();
     }
 
     //--------------------------------------------------------------------------
@@ -48,9 +73,19 @@ abstract class ModuleInstall {
      *
      * @return \Phalcon\Db\Adapter\Pdo database connection instance.
      */
-    final public function getDb(): \Phalcon\Db\Adapter\Pdo
+    final protected function getDb(): \Phalcon\Db\Adapter\Pdo
     {
-        return $this->db;
+        return $this->di->get('db');
+    }
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Get current logger from di.
+     */
+    final protected function getLogger(): \Phalcon\Logger\Adapter
+    {
+        return $this->db->get('logger');
     }
 
     //--------------------------------------------------------------------------
@@ -73,7 +108,7 @@ abstract class ModuleInstall {
      *
      * @return bool true, if module installed, false otherwise.
      */
-    public static function isInstalled(AdapterPdo $db): bool {
+    public static function isInstalled(\Phalcon\Db\Adapter\Pdo $db): bool {
         $info = static::getModuleInfo();
 
         $result = false;
@@ -104,7 +139,76 @@ abstract class ModuleInstall {
 
         if (!static::isInstalled($this->getDb())) {
             $module = new Module(static::getModuleInfo());
+
             $result = $module->save($info);
+            if ($result) {
+                $result = $this->createTables();
+            }
+        }
+
+        return $result;
+    }
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Creating module tables into db.
+     *
+     * @return bool true - if success, false - otherwise.
+     */
+    final protected function createTables(): bool
+    {
+        $reflect = new \ReflectionClass($this);
+        $path = dirname($reflect->getFileName()) . DIRECTORY_SEPARATOR
+            . 'models' . DIRECTORY_SEPARATOR
+            . '*.php';
+
+        $models = array_map(function ($filename) {
+            return basename($filename, '.php');
+        }, glob($path));
+
+        return $this->doCreateTables();
+    }
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Create tables from models list.
+     * @param array $models models list from module folder models.
+     * @return bool true, if no errors, false otherwise.
+     */
+    private function doCreateTables($models): bool
+    {
+        // tables of module do not exists, but it's right
+        $result = true;
+        $db = $this->getDb();
+        $logger = $this->getLogger();
+
+        try {
+            // trying create tables from models info
+            foreach ($models as $model) {
+                $className = '\\' . $this->moduleNamespace
+                    . '\\Models\\' . $model;
+                $instance = new $className();
+
+                $tableName = $instance->getSource();
+
+                $logger->debug('Create table: ' . $tableName);
+                $db->createTable(
+                    $tableName,
+                    null,
+                    [
+                        'columns' => $className::getTableColumns()
+                    ]
+                );
+            }
+        } catch (Exception $e) { // skip create tables on error...
+            $this->getLogger()->error(
+                "Error on create tables:\n"
+                    . "classname: $className\n"
+                    . "message:\n" . $e->getMessage()
+            );
+            $result = false;
         }
 
         return $result;

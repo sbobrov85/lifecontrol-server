@@ -57,7 +57,7 @@ final class Module {
                 $logger->warning("Module $moduleClassName not installed!");
                 $logger->info('Attempt register');
 
-                if (!(new $moduleClassName($db))->register()) {
+                if (!(new $moduleClassName($app->getDi()))->register()) {
                     $logger->error('Error on register! Skipped.');
                     continue;
                 } else {

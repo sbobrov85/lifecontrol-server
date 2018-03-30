@@ -7,6 +7,7 @@ define('CONFIG_DIR', realpath(PROJECT_ROOT . DIRECTORY_SEPARATOR . 'config'));
 try {
     require_once(CONFIG_DIR . DIRECTORY_SEPARATOR . 'loader.php');
     require_once(CONFIG_DIR . DIRECTORY_SEPARATOR . 'di.php');
+    $di->set('loader', $loader);
 
     $app = new \Phalcon\Mvc\Micro();
 

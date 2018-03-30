@@ -1,8 +1,6 @@
 <?php
 namespace Includes;
 
-require_once('../../Install.php');
-
 use
     Phalcon\Mvc\Model;
 
@@ -20,6 +18,17 @@ abstract class ModuleModel extends Model
     {
         // set module table prefix
         $manager = $this->getModelsManager();
-        $manager->setModelPrefix(Install::getModulePrefix());
+        // $manager->setModelPrefix($this->getModulePrefix());
     }
+
+    //--------------------------------------------------------------------------
+
+    /**
+     * Geting database columns description from colums property.
+     *
+     * @link https://docs.phalconphp.com/en/latest/db-layer#creating-tables
+     *
+     * @return array columns descriptions or empty array.
+     */
+    public abstract static function getTableColumns(): array;
 }
