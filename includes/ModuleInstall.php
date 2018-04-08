@@ -61,7 +61,9 @@ abstract class ModuleInstall {
             $this->moduleNamespace . '\Models' => $this->moduleBaseDir
                 . '/models',
             $this->moduleNamespace . '\Models\Base' => $this->moduleBaseDir
-                . '/models/base'
+                . '/models/base',
+            $this->moduleNamespace . '\Plugins' => $this->moduleBaseDir
+                . '/plugins',
         ], true);
         $loader->register();
     }
@@ -85,7 +87,7 @@ abstract class ModuleInstall {
      */
     final protected function getLogger(): \Phalcon\Logger\Adapter
     {
-        return $this->db->get('logger');
+        return $this->di->get('logger');
     }
 
     //--------------------------------------------------------------------------
@@ -167,7 +169,7 @@ abstract class ModuleInstall {
             return basename($filename, '.php');
         }, glob($path));
 
-        return $this->doCreateTables();
+        return $this->doCreateTables($models);
     }
 
     //--------------------------------------------------------------------------
@@ -239,5 +241,5 @@ abstract class ModuleInstall {
      *
      * @return array pairs 'Module' => listener instance.
      */
-    abstract public static function listeners(): array;
+    abstract public function listeners(): array;
 }

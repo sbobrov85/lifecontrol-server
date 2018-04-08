@@ -17,7 +17,7 @@ try {
     $loggerConfig = $di->get('config')->get('logger');
     $logger = \Phalcon\Logger\Factory::load($loggerConfig);
     $di->set('logger', $logger);
-    $logger->info('Logger init success');
+    $logger->info('--> Start logging');
 
     $logger->debug(
         'Current request URI: ' . (new \Phalcon\Http\Request())->getURI()

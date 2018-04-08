@@ -11,5 +11,7 @@ use
  */
 class User extends UserBase
 {
-
+    const
+        ROLE_GUEST = 0,
+        ROLE_USER = 1;
 }

@@ -12,4 +12,10 @@ if (!file_exists(CONFIG_DIR . DIRECTORY_SEPARATOR . 'config.php')) {
 $config = require_once (CONFIG_DIR . DIRECTORY_SEPARATOR . 'config.php');
 $di->set('config', $config);
 
+$di->set('session', function(){
+    $session = new \Phalcon\Session\Adapter\Files();
+    $session->start();
+    return $session;
+});
+
 $di->set('db', Phalcon\Db\Adapter\Pdo\Factory::load($config->db));

@@ -69,8 +69,7 @@ final class Module {
             self::collectRoutes($app, $moduleClassName);
 
             $logger->debug('Attach events');
-            $eventsManager = new EventsManager();
-            self::collectListeners($eventsManager, $moduleClassName);
+            $eventsManager = self::collectListeners($app, $moduleClassName);
             $app->setEventsManager($eventsManager);
 
             $logger->debug('Finished');
@@ -99,18 +98,24 @@ final class Module {
     /**
      * Collect events listeners to events manager.
      *
-     * @param \Phalcon\Events\Manager $eventsManager events manager instance.
+     * @param \Phalcon\Mvc\Micro $app current application.
      * @param string $moduleClassName full module class name.
+     *
+     * @return \Phalcon\Events\Manager manager instance.
      */
     private static function collectListeners(
-        EventsManager &$eventsManager,
+        Micro $app,
         string $moduleClassName
-    ) {
-        $listeners = $moduleClassName::listeners();
+    ): \Phalcon\Events\Manager {
+        $eventsManager = new EventsManager();
+
+        $listeners = (new $moduleClassName($app->getDi()))->listeners();
         if (is_array($listeners)) {
             foreach ($listeners as $component => $listener) {
                 $eventsManager->attach($component, $listener);
             }
         }
+
+        return $eventsManager;
     }
 }

@@ -4,7 +4,8 @@ namespace Modules\User;
 use
     Includes\ModuleInstall,
     Modules\User\Controller as UserController,
-    Phalcon\Mvc\Micro\Collection;
+    Phalcon\Mvc\Micro\Collection,
+    Modules\User\Plugins\Security as SecurityPlugin;
 
 class Install extends ModuleInstall
 {
@@ -41,7 +42,7 @@ class Install extends ModuleInstall
 
         $collection->setHandler('\Modules\User\Controller', true);
         $collection->setPrefix('/user');
-        $collection->get('/info', 'infoAction');
+        $collection->post('/info', 'infoAction');
 
         return $collection;
     }
@@ -51,14 +52,10 @@ class Install extends ModuleInstall
     /**
      * {@inheritdoc}
      */
-    public static function listeners(): array
+    public function listeners(): array
     {
         return [
-            'micro' => new class {
-                function beforeExecuteRoute() {
-                    UserController::checkAuth();
-                }
-            }
+            'micro' => new SecurityPlugin()
         ];
     }
 }
