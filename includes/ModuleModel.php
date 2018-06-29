@@ -1,8 +1,7 @@
 <?php
 namespace Includes;
 
-use
-    Phalcon\Mvc\Model;
+use Phalcon\Mvc\Model;
 
 /**
  * Class ModuleModel.
@@ -30,5 +29,5 @@ abstract class ModuleModel extends Model
      *
      * @return array columns descriptions or empty array.
      */
-    public abstract static function getTableColumns(): array;
+    abstract public static function getTableColumns(): array;
 }

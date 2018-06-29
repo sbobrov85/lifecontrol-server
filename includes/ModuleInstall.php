@@ -2,10 +2,9 @@
 
 namespace Includes;
 
-use
-    \Phalcon\Di,
-    \Phalcon\Db\Adapter\Pdo as AdapterPdo,
-    \Models\Module;
+use \Phalcon\Di;
+use \Phalcon\Db\Adapter\Pdo as AdapterPdo;
+use \Models\Module;
 
 /**
  * Class ModuleInstall.
@@ -13,7 +12,8 @@ use
  * Common class for core and 3rd party modules.
  * See modules/README.md for details.
  */
-abstract class ModuleInstall {
+abstract class ModuleInstall
+{
     /**
      * Contains dependency injector instance.
      */
@@ -37,7 +37,8 @@ abstract class ModuleInstall {
      *
      * @param \Phalcon\Di $di current di.
      */
-    final public function __construct(Di $di) {
+    final public function __construct(Di $di)
+    {
         $this->di = $di;
 
         $moduleReflectionClass = (new \ReflectionClass(get_class($this)));
@@ -110,7 +111,8 @@ abstract class ModuleInstall {
      *
      * @return bool true, if module installed, false otherwise.
      */
-    public static function isInstalled(\Phalcon\Db\Adapter\Pdo $db): bool {
+    public static function isInstalled(\Phalcon\Db\Adapter\Pdo $db): bool
+    {
         $info = static::getModuleInfo();
 
         $result = false;
@@ -204,11 +206,12 @@ abstract class ModuleInstall {
                     ]
                 );
             }
-        } catch (Exception $e) { // skip create tables on error...
+        } catch (Exception $e) {
+// skip create tables on error...
             $this->getLogger()->error(
                 "Error on create tables:\n"
-                    . "classname: $className\n"
-                    . "message:\n" . $e->getMessage()
+                . "classname: $className\n"
+                . "message:\n" . $e->getMessage()
             );
             $result = false;
         }

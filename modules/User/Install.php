@@ -1,11 +1,10 @@
 <?php
 namespace Modules\User;
 
-use
-    Includes\ModuleInstall,
-    Modules\User\Controller as UserController,
-    Phalcon\Mvc\Micro\Collection,
-    Modules\User\Plugins\Security as SecurityPlugin;
+use Includes\ModuleInstall;
+use Modules\User\Controller as UserController;
+use Phalcon\Mvc\Micro\Collection;
+use Modules\User\Plugins\Security as SecurityPlugin;
 
 class Install extends ModuleInstall
 {

@@ -7,7 +7,8 @@ namespace Includes;
  * Abstract HTTP exception (throw http exception by name).
  * Add HTTP_CODE and HTTP message constants for extended classes.
  */
-abstract class HttpAbstractException extends \Exception {
+abstract class HttpAbstractException extends \Exception
+{
     /**
      * Contains code key.
      */

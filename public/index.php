@@ -1,8 +1,10 @@
 <?php
 
-//define path constants
-define('PROJECT_ROOT', realpath(__DIR__ . DIRECTORY_SEPARATOR . '..'));
-define('CONFIG_DIR', realpath(PROJECT_ROOT . DIRECTORY_SEPARATOR . 'config'));
+require_once(implode(DIRECTORY_SEPARATOR, [
+    '..',
+    'config',
+    'defines.php'
+]));
 
 try {
     require_once(CONFIG_DIR . DIRECTORY_SEPARATOR . 'loader.php');
@@ -36,7 +38,7 @@ try {
         $result = $app->getReturnedValue();
 
         if (is_array($result)) {
-           $app->response->setContent(json_encode($result));
+            $app->response->setContent(json_encode($result));
         } elseif (!empty($result)) {
             $app->response->setContent($result);
         } elseif (empty($result)) {
@@ -53,7 +55,8 @@ try {
     Helpers\Common::getResponse($e->getCode(), $e->getMessage())->send();
 } catch (\Phalcon\Http\Request\Exception $e) {
     Helpers\Common::getResponse(400)->send();
-} catch (\Exception $e) { // log any other exceptions...
+} catch (\Exception $e) {
+    // log any other exceptions...
     if (isset($logger)) {
         $logger->critical("Critical server error:\n$e");
     }

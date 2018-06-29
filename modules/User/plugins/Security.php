@@ -2,7 +2,8 @@
 
 namespace Modules\User\Plugins;
 
-class Security extends \Phalcon\Mvc\User\Plugin {
+class Security extends \Phalcon\Mvc\User\Plugin
+{
     /**
      * Determining the level of access to the application.
      * Require login and password variables in post request.

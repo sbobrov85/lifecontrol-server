@@ -2,23 +2,23 @@
 
 namespace Helpers;
 
-use
-    \Phalcon\Mvc\Micro,
-    \Phalcon\Events\Manager as EventsManager,
-    \Phalcon\Logger\Adapter as LoggerAdapter;
+use \Phalcon\Mvc\Micro;
+use \Phalcon\Events\Manager as EventsManager;
+use \Phalcon\Logger\Adapter as LoggerAdapter;
 
 /**
  * Class Module.
  *
  * Contains functions for modules control, e.c. register, unregister and others.
  */
-final class Module {
+final class Module
+{
     /**
      * Scaning modules folder and building full class names.
      *
      * @return array list of full module class names.
      */
-    protected  static function scanModules(): array
+    protected static function scanModules(): array
     {
         $modules = array();
 
@@ -106,7 +106,7 @@ final class Module {
     private static function collectListeners(
         Micro $app,
         string $moduleClassName
-    ): \Phalcon\Events\Manager {
+    ) : \Phalcon\Events\Manager {
         $eventsManager = new EventsManager();
 
         $listeners = (new $moduleClassName($app->getDi()))->listeners();

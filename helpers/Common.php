@@ -1,16 +1,16 @@
 <?php
 namespace Helpers;
 
-use
-    \Includes\HttpAbstractException,
-    \Phalcon\Http\Response;
+use \Includes\HttpAbstractException;
+use \Phalcon\Http\Response;
 
 /**
  * Class Common.
  *
  * Contains various methods for application.
  */
-class Common {
+class Common
+{
     /**
      * Construct response object.
      *
@@ -22,7 +22,7 @@ class Common {
     public static function getResponse(
         int $code = 200,
         string $message = null
-    ): Response {
+    ) : Response {
         $response = new Response();
         $response
             ->setStatusCode($code)

@@ -8,7 +8,8 @@ use Includes\HttpAbstractException;
  *
  * Message and code for 204 http code.
  */
-class Http204Exception extends HttpAbstractException {
+class Http204Exception extends HttpAbstractException
+{
     /**
      * Contains http message.
      */

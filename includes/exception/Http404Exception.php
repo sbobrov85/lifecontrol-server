@@ -8,7 +8,8 @@ use Includes\HttpAbstractException;
  *
  * Message and code for 404 http code.
  */
-class Http404Exception extends HttpAbstractException {
+class Http404Exception extends HttpAbstractException
+{
     /**
      * Contains http message.
      */

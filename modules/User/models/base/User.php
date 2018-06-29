@@ -1,9 +1,8 @@
 <?php
 namespace Modules\User\Models\Base;
 
-use
-    \Phalcon\Db\Column as Column,
-    Includes\ModuleModel;
+use \Phalcon\Db\Column as Column;
+use Includes\ModuleModel;
 
 /**
  * Class User.

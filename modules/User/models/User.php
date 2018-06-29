@@ -1,8 +1,7 @@
 <?php
 namespace Modules\User\Models;
 
-use
-    Modules\User\Models\Base\User as UserBase;
+use Modules\User\Models\Base\User as UserBase;
 
 /**
  * Class User.
