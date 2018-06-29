@@ -5,6 +5,7 @@
         "ext-sqlite3": ">=3"
     },
     "require-dev": {
+        "squizlabs/php_codesniffer": "*",
         "phalcon/devtools": "3.2.*@dev"
      }
 }
